@@ -1,0 +1,19 @@
+main: main.java.aironline.AirOnline
+name: AirOnline
+version: 1.0.0
+api-version: 1.12.2
+load: POSTWORLD
+author: Orachigami
+database: true
+commands:
+    aironline:
+        description: 'Главная команда AirOnline'
+        permission: aironline.user
+permissions:
+    aironline.personal:
+        description: 'Использование /aironline'
+        default: true
+    aironline.admin:
+        description: 'Возможность смотреть чужую статистику: /aironline [player]'
+        children:
+            aironline.personal: true
