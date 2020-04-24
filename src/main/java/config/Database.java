@@ -17,9 +17,9 @@ public class Database {
         Database db = new Database();
         db.setHost("127.0.0.1");
         db.setPort(3306);
-        db.setName("freshworld_main");
-        db.setUsername("aslanikoko123");
-        db.setPassword("aslanikoko123");
+        db.setName("databaseName");
+        db.setUsername("username");
+        db.setPassword("password");
         db.setTable("AirOnlinePlugin");
         db.setUpdateTime(10);
         return db;
