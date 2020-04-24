@@ -34,17 +34,17 @@ public class Messages {
         Messages msg = new Messages();
         msg.setPersonal(new String[] {
             "§c§l[!] §aВаша статистика:",
-            "§c§l[!] §fНаиграно за день:§c %online_day%",
-            "§c§l[!] §fНаиграно за неделю:§c %online_week%",
-            "§c§l[!] §fНаиграно за месяц:§c %online_month%",
-            "§c§l[!] §fВсего наиграли:§c %online_total%",
+            "§c§l[!] §fНаиграно за день:§c %online_day%§f час/ов",
+            "§c§l[!] §fНаиграно за неделю:§c %online_week%§f час/ов",
+            "§c§l[!] §fНаиграно за месяц:§c %online_month%§f час/ов",
+            "§c§l[!] §fВсего наиграли:§c %online_total%§f час/ов",
         });
         msg.setAbout(new String[] {
             "§c§l[!] §aСтатистика игрока:§c %player%",
-            "§c§l[!] §fНаиграно за день:§c %online_day%",
-            "§c§l[!] §fНаиграно за неделю:§c %online_week%",
-            "§c§l[!] §fНаиграно за месяц:§c %online_month%",
-            "§c§l[!] §fВсего наиграли:§c %online_total%",
+            "§c§l[!] §fНаиграно за день:§c %online_day%§f час/ов",
+            "§c§l[!] §fНаиграно за неделю:§c %online_week%§f час/ов",
+            "§c§l[!] §fНаиграно за месяц:§c %online_month%§f час/ов",
+            "§c§l[!] §fВсего наиграли:§c %online_total%§f час/ов",
             "§c§l[!] §fПоследний вход:§c %last_join%",
         });
         msg.setCooldown(new String[] {

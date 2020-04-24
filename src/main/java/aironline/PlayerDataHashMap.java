@@ -63,4 +63,17 @@ public class PlayerDataHashMap {
             else it.remove();
         }
     }
+    
+    /**
+     * Sets totalPlayedTime to substraction of current time and lastPlayed time and sets lastPlayedTime to current time 
+     */
+    public synchronized void updatePlayerUpTime() {
+        Iterator<PlayerData> it = map.values().iterator();
+        long now = System.currentTimeMillis();
+        while (it.hasNext()) {
+            PlayerData player = it.next();
+            player.setTotalPlayedTime(now - player.getLastPlayedTime());
+            player.setLastPlayedTime(now);
+        }
+    }
 }

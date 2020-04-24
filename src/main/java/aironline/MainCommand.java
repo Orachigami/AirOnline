@@ -136,14 +136,15 @@ public class MainCommand extends Command {
 
         for (int i = 0; i < messages.length; i++) {
             prepared_messages[i] = new StringBuilder(messages[i]);
+            double hour = 3600000.0;
             Messages.substitute(prepared_messages[i], Messages.PLAYER, player_name);
-            Messages.substitute(prepared_messages[i], Messages.ONLINE_DAY, String.format("%.2f", player_data.getDayPlayedTime() / 3600000.0));
-            Messages.substitute(prepared_messages[i], Messages.ONLINE_WEEK, String.format("%.2f", player_data.getWeekPlayedTime() / 3600000.0));
-            Messages.substitute(prepared_messages[i], Messages.ONLINE_MONTH, String.format("%.2f", player_data.getMonthPlayedTime() / 3600000.0));
-            Messages.substitute(prepared_messages[i], Messages.ONLINE_TOTAL, String.format("%.2f", player_data.getTotalPlayedTime() / 3600000.0));
+            Messages.substitute(prepared_messages[i], Messages.ONLINE_DAY, String.format("%.2f", player_data.getDayPlayedTime() / hour));
+            Messages.substitute(prepared_messages[i], Messages.ONLINE_WEEK, String.format("%.2f", player_data.getWeekPlayedTime() / hour));
+            Messages.substitute(prepared_messages[i], Messages.ONLINE_MONTH, String.format("%.2f", player_data.getMonthPlayedTime() / hour));
+            Messages.substitute(prepared_messages[i], Messages.ONLINE_TOTAL, String.format("%.2f", player_data.getTotalPlayedTime() / hour));
 
             Date date = Date.from(Instant.ofEpochMilli(player_data.getLastPlayedTime()));
-            String format = new SimpleDateFormat("d.MM.y H:m").format(date);
+            String format = new SimpleDateFormat("dd.MM.yyyy | HH:mm").format(date);
             Messages.substitute(prepared_messages[i], Messages.LAST_JOIN, format);
         }
         messages = new String[messages.length];

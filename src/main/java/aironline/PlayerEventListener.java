@@ -43,11 +43,6 @@ public final class PlayerEventListener implements Listener {
         UUID uuid = e.getPlayer().getUniqueId();
         PlayerData playerData = players.get(uuid);
         if (playerData != null) {
-            long onlineTime = System.currentTimeMillis() - playerData.getLastPlayedTime();
-            playerData.setTotalPlayedTime(playerData.getTotalPlayedTime() + onlineTime);
-            playerData.setMonthPlayedTime(playerData.getMonthPlayedTime()+ onlineTime);
-            playerData.setWeekPlayedTime(playerData.getWeekPlayedTime() + onlineTime);
-            playerData.setDayPlayedTime(playerData.getDayPlayedTime() + onlineTime);
             playerData.setOnline(false);
         }
     }

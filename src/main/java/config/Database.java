@@ -10,6 +10,8 @@ public class Database {
     private String name;
     private String username;
     private String password;
+    private String table;
+    private int updateTime;
     
     public static Database generateDefault() {
         Database db = new Database();
@@ -18,6 +20,8 @@ public class Database {
         db.setName("freshworld_main");
         db.setUsername("aslanikoko123");
         db.setPassword("aslanikoko123");
+        db.setTable("AirOnlinePlugin");
+        db.setUpdateTime(10);
         return db;
     }
 
@@ -59,6 +63,22 @@ public class Database {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
+
+    public int getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(int updateTime) {
+        this.updateTime = updateTime;
     }
     
 }

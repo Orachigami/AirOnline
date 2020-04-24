@@ -12,11 +12,11 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import main.java.config.Config;
-import main.java.config.Database;
 import main.java.config.Messages;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Calendar;
 
 /**
  * Plugin for players online monitoring
@@ -33,13 +33,12 @@ public class AirOnline extends Plugin {
     public PlayerDataHashMap players;
     private LocalDateTime endOfDay;
     private LocalDateTime endOfWeek;
-    int weekNumber;
     private LocalDateTime endOfMonth;
     
     /**
      * Creates default config and messages files if none of them found
      */
-    private void saveDefaultConfig() {
+    void saveDefaultConfig() {
         getDataFolder().mkdir();
         File config_file = new File(getDataFolder(), "config.json");
         File msg_file = new File(getDataFolder(), "messages.json");
@@ -64,7 +63,7 @@ public class AirOnline extends Plugin {
     /**
      * Loads config and messages files
      */
-    private void loadConfig() {
+    void loadConfig() {
         File config_file = new File(getDataFolder(), "config.json");
         File msg_file = new File(getDataFolder(), "messages.json");
         Gson gson = new Gson();
@@ -84,14 +83,8 @@ public class AirOnline extends Plugin {
      * Initilizates DatabaseManager
      */
     private void initDatabase() {
-        Database database = config.getDatabase();
-        String host = database.getHost();
-        int port = database.getPort();
-        String name = database.getName();
-        String user = database.getUsername();
-        String password = database.getPassword();
         try {
-            manager = DatabaseManager.createInstance(host, port, name, user, password);
+            manager = DatabaseManager.createInstance(config.getDatabase());
             manager.init();
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
@@ -105,34 +98,29 @@ public class AirOnline extends Plugin {
         if (task != null) task.cancel();
         listener = new PlayerEventListener(config.getOptions().getIgnoredServers(), players);
         getProxy().getPluginManager().registerListener(this, listener);
-        long period = 10L;
+        long period = config.getDatabase().getUpdateTime();
         TaskScheduler scheduler = getProxy().getScheduler();
         task = scheduler.schedule(this, () -> {
             LocalDateTime now = LocalDateTime.now();
-            
             if (endOfDay.isBefore(now)) {
+                LocalDate date = now.toLocalDate();
                 if (endOfWeek.isBefore(now)) {
                     if (endOfMonth.isBefore(now)) {
                         manager.resetMonth();
-                        endOfDay = LocalDate.now().atTime(LocalTime.MIN).plusDays(1);
-                        endOfWeek = LocalDate.now().atTime(LocalTime.MIN).withDayOfMonth(7);
-                        endOfMonth = LocalDate.now().atTime(LocalTime.MIN).withDayOfMonth(1).plusMonths(1);
-                        weekNumber = 0;
+                        endOfDay = date.atTime(LocalTime.MAX);
+                        endOfWeek = date.atTime(LocalTime.MAX).plusDays((8 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) % 7);
+                        endOfMonth = date.atTime(LocalTime.MAX).withDayOfMonth(1).plusMonths(1).minusDays(1);
                     } else {
                         manager.resetWeek();
-                        endOfDay = LocalDate.now().atTime(LocalTime.MIN).plusDays(1);
-                        if (weekNumber++ == 3) {
-                            endOfWeek = LocalDate.now().atTime(LocalTime.MIN).withDayOfMonth(1).plusMonths(1);
-                            weekNumber = 0;
-                        } else {
-                            endOfWeek = LocalDate.now().atTime(LocalTime.MIN).plusDays(7);
-                        }
+                        endOfDay = date.atTime(LocalTime.MAX);
+                        endOfWeek = date.atTime(LocalTime.MAX).plusDays((8 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) % 7);
                     }
                 } else {
                     manager.resetDay();
-                    endOfDay = LocalDate.now().atTime(LocalTime.MIN).plusDays(1);
+                    endOfDay = date.atTime(LocalTime.MAX);
                 }
             }
+            players.updatePlayerUpTime();
             manager.updateData(players.getValues());
             players.resetAll();
         }, period, period, TimeUnit.MINUTES);
@@ -141,15 +129,9 @@ public class AirOnline extends Plugin {
     @Override
     public void onEnable() {
         LocalDate localDate = LocalDate.now();
-        int weekday = (localDate.getDayOfMonth() / 7) * 7 + 7;
-        endOfDay = localDate.atTime(LocalTime.MIN).plusDays(1);
-        if (localDate.getDayOfMonth() > 27) {
-            endOfWeek = localDate.atTime(LocalTime.MIN).withDayOfMonth(1).plusMonths(1);
-        } else {
-            endOfWeek = localDate.atTime(LocalTime.MIN).withDayOfMonth(weekday);
-        }
-        endOfMonth = localDate.atTime(LocalTime.MIN).withDayOfMonth(1).plusMonths(1);
-        weekNumber = 0;
+        endOfDay = localDate.atTime(LocalTime.MAX);
+        endOfWeek = localDate.atTime(LocalTime.MAX).plusDays((8 - Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) % 7);
+        endOfMonth = localDate.atTime(LocalTime.MAX).withDayOfMonth(1).plusMonths(1).minusDays(1);
         
         if (players == null) players = new PlayerDataHashMap();
         saveDefaultConfig();

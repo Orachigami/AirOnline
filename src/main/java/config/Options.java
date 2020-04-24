@@ -5,10 +5,12 @@ package main.java.config;
  * @author Orachigami
  */
 public class Options {
+    private boolean enableIgnoredServers;
     private String[] ignoredServers;
     
     public static Options generateDefault() {
         Options options = new Options();
+        options.setEnableIgnoredServers(false);
         options.setIgnoredServers(new String[] {"auth"});
         return options;
     }
@@ -19,5 +21,13 @@ public class Options {
 
     public void setIgnoredServers(String[] ignoredServers) {
         this.ignoredServers = ignoredServers;
+    }
+
+    public boolean isEnableIgnoredServers() {
+        return enableIgnoredServers;
+    }
+
+    public void setEnableIgnoredServers(boolean enableIgnoredServers) {
+        this.enableIgnoredServers = enableIgnoredServers;
     }
 }
